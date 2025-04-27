@@ -12,6 +12,8 @@ function PanelAsignador() {
   const [nuevaNotificacion, setNuevaNotificacion] = useState(null);
   const [notificaciones, setNotificaciones] = useState([]);
   const [mostrarPanel, setMostrarPanel] = useState(false);
+  const [paginaActual, setPaginaActual] = useState(1);
+  const solicitudesPorPagina = 10;
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -59,6 +61,16 @@ function PanelAsignador() {
       month: "2-digit",
       day: "2-digit",
     });
+  };
+
+  const indiceUltimaSolicitud = paginaActual * solicitudesPorPagina;
+  const indicePrimeraSolicitud = indiceUltimaSolicitud - solicitudesPorPagina;
+  const solicitudesActuales = solicitudes.slice(indicePrimeraSolicitud, indiceUltimaSolicitud);
+  const totalPaginas = Math.ceil(solicitudes.length / solicitudesPorPagina);
+
+  const cambiarPagina = (nuevaPagina) => {
+    if (nuevaPagina < 1 || nuevaPagina > totalPaginas) return;
+    setPaginaActual(nuevaPagina);
   };
 
   return (
@@ -121,7 +133,7 @@ function PanelAsignador() {
               </tr>
             </thead>
             <tbody>
-              {solicitudes.map((s) => (
+              {solicitudesActuales.map((s) => (
                 <tr key={s.id} className="border-t hover:bg-blue-50">
                   <td className="px-4 py-2 font-mono">{s.radicado}</td>
                   <td className="px-4 py-2">{s.nombre} {s.apellido}</td>
@@ -140,6 +152,35 @@ function PanelAsignador() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Botones de paginación */}
+      {totalPaginas > 1 && (
+        <div className="flex justify-center items-center mt-6 space-x-2">
+          <button
+            onClick={() => cambiarPagina(paginaActual - 1)}
+            disabled={paginaActual === 1}
+            className={`px-3 py-1 rounded ${paginaActual === 1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          >
+            Anterior
+          </button>
+          {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((num) => (
+            <button
+              key={num}
+              onClick={() => cambiarPagina(num)}
+              className={`px-3 py-1 rounded ${paginaActual === num ? 'bg-blue-700 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+            >
+              {num}
+            </button>
+          ))}
+          <button
+            onClick={() => cambiarPagina(paginaActual + 1)}
+            disabled={paginaActual === totalPaginas}
+            className={`px-3 py-1 rounded ${paginaActual === totalPaginas ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+          >
+            Siguiente
+          </button>
         </div>
       )}
     </div>
