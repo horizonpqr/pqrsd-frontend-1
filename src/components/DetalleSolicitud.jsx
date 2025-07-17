@@ -183,11 +183,11 @@ function DetalleSolicitud() {
         </div>
       </div>
 
-      {solicitud.archivo && (
+      {solicitud.archivo_url && (
         <div className="mb-6">
           <h3 className="text-sm font-semibold text-gray-800 mb-2">Archivo adjunto:</h3>
           <iframe
-            src={`${import.meta.env.VITE_API_URL.replace(/\/$/, "")}/${solicitud.archivo.replace(/^\/?/, "")}`}
+            src={solicitud.archivo_url}
             title="Archivo PDF"
             width="100%"
             height="1000px"
@@ -195,7 +195,7 @@ function DetalleSolicitud() {
           />
         </div>
       )}
-
+      
       <div className="mt-6">
         <label className="text-sm font-medium block mb-2">Asignar a responsable:</label>
         <select
