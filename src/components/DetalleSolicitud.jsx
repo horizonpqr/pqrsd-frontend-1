@@ -187,7 +187,7 @@ function DetalleSolicitud() {
         <div className="mb-6">
           <h3 className="text-sm font-semibold text-gray-800 mb-2">Archivo adjunto:</h3>
           <iframe
-            src={`${import.meta.env.VITE_API_URL}${solicitud.archivo}`}
+            src={`${import.meta.env.VITE_API_URL.replace(/\/$/, "")}/${solicitud.archivo.replace(/^\/?/, "")}`}
             title="Archivo PDF"
             width="100%"
             height="1000px"
